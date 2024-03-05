@@ -133,14 +133,16 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
         "email": _emailController.text,
       };
       await EmployeeService().insertNewEmployee(data);
+      setState(() {
+        getEmployeeList();
+      });
     } else {
       data = {
-        "user_id": user!.id,
-        "role_id": _roleIdController.text,
-        "branch_id": _branchIdController.text,
-        "department_id": _departmentIdController.text
+        "role_id": int.parse(_roleIdController.text),
+        "branch_id": int.parse(_branchIdController.text),
+        "department_id": int.parse(_departmentIdController.text)
       };
-      await EmployeeService().updatEmployee(user.id!, data);
+      await EmployeeService().updatEmployee(user!.id!, data);
     }
   }
 
@@ -207,6 +209,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       isEdit: true,
                       isEditable: true,
                       controller: _nameController,
+                      texthint: 'Employee Name',
                     ),
                     const SizedBox(
                       height: 8,
@@ -215,6 +218,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       isEdit: true,
                       isEditable: true,
                       controller: _phoneController,
+                      texthint: 'Employee Phone',
                     ),
                     const SizedBox(
                       height: 8,
@@ -223,6 +227,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       isEdit: true,
                       isEditable: true,
                       controller: _userCodeController,
+                      texthint: 'Employee Code',
                     ),
                     const SizedBox(
                       height: 8,
@@ -231,6 +236,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       isEdit: true,
                       isEditable: true,
                       controller: _emailController,
+                      texthint: 'Employee Email',
                     ),
                     const SizedBox(
                       height: 8,
