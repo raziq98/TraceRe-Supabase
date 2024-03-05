@@ -17,7 +17,7 @@ class _txtFormFieldState extends State<txtFormField> {
   @override
   void initState() {
     super.initState();
-    if (widget.text != null) widget.controller.text = widget.text!;
+    if (widget.text != null || widget.text != '') {widget.controller.text = widget.text??'';}
   }
   @override
   Widget build(BuildContext context) {
@@ -27,14 +27,14 @@ class _txtFormFieldState extends State<txtFormField> {
         controller: widget.controller,
         style: ThemeConstant.blackTextBold18,
         enabled: widget.isEdit == true
-            ? widget.isEditable!
+            ? widget.isEditable==true
                 ? true
                 : false
             : false,
         autofocus: true,
         decoration: InputDecoration(
           label: Text(
-            widget.texthint!,
+            widget.texthint ?? '',
             style: ThemeConstant.blackTextBold18,
           ),
           enabledBorder: OutlineInputBorder(
