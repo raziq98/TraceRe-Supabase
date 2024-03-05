@@ -17,7 +17,7 @@ class _txtFormFieldState extends State<txtFormField> {
   @override
   void initState() {
     super.initState();
-    if (widget.text != null) widget.controller.text = widget.text!;
+    if (widget.text != null || widget.text != '') widget.controller.text = widget.text!;
   }
   @override
   Widget build(BuildContext context) {
