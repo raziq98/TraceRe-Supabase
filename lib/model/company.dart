@@ -22,7 +22,7 @@ class Company {
   String? phone;
   String? email;
   String? companyBio;
-  String? branchId;
+  int? parentCompId;
   String? establishedDate;
 
  Company({
@@ -31,30 +31,30 @@ class Company {
     this.photo,
     this.phone,
     this.email,
-    this.branchId,
+    this.parentCompId,
     this.companyBio,
     this.establishedDate,
   });
 
   Company.fromJson(Map<String, dynamic> json) {
-    id = json["company_id"];
-    name = json["company_name"];
+    id = json["id"];
+    name = json["name"];
     email = json["email"];
     phone = json["phone"];
     photo=json["photo"];
     establishedDate = json["established_date"];
-    branchId = json["branch_id"];
-    companyBio = json["company_bio"];
+    parentCompId = json["parent_company"];
+    companyBio = json["bio"];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data["company_id"] = id;
-    data["company_name"] = name;
+    data["id"] = id;
+    data["name"] = name;
     data["email"] = email;
     data["phone"] = phone;
     data["established_date"] = establishedDate;
-    data["branch_id"] = branchId;
-    data["self_introduction"] = companyBio;
+    data["parent_company"] = parentCompId;
+    data["bio"] = companyBio;
     data["profile_picture"] = photo;
     return data;
   }

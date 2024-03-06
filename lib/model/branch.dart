@@ -19,7 +19,7 @@ class Branch {
   int? id;
   String? companyId;
   String? address;
-  String? postalCode;
+  int? postalCode;
   String? country;
   String? branchCode;
   String? domain;
