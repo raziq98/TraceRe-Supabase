@@ -199,7 +199,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                   const SizedBox(
                     height: 8,
                   ),
-                  branchDetailField(branch?.postalCode ?? '', 'Postal Code',
+                  branchDetailField(branch?.postalCode.toString() ?? '', 'Postal Code',
                       true, _postalCodeController, true),
                   const SizedBox(
                     height: 8,
@@ -438,7 +438,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                           branchList[index].address ?? '',
                           style: ThemeConstant.blackText14,
                         ),
-                        Text(branchList[index].postalCode ?? '',
+                        Text(branchList[index].postalCode.toString(),
                             style: ThemeConstant.blackText14),
                         Text(branchList[index].country ?? '',
                             style: ThemeConstant.blackText14),

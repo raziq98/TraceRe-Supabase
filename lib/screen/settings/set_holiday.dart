@@ -62,7 +62,7 @@ class _SetHolidayState extends State<SetHoliday> {
         name: _nameController.text,
         startFrom: parsedStartDate,
         endAt: parsedEndAtDate,
-        dayAmount: _daysController.text);
+        dayAmount: int.parse(_daysController.text));
     _tempList.add(temp);
   }
 

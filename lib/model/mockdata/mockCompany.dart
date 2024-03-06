@@ -9,7 +9,7 @@ class MockCompany{
       phone: "123-456-7890",
       email: "info@abc.com",
       companyBio: "A leading technology company.",
-      branchId: "B123",
+      parentCompId: 7123,
       establishedDate: "2020-01-15",
     ),
     Company(
@@ -19,7 +19,7 @@ class MockCompany{
       phone: "987-654-3210",
       email: "contact@xyz.com",
       companyBio: "Manufacturing quality products.",
-      branchId: "B456",
+      parentCompId: 7456,
       establishedDate: "2015-08-22",
     ),
   ];

@@ -243,7 +243,7 @@ class _NotificationItemState extends State<NotificationItem> {
                 const SizedBox(
                   height: 5,
                 ),
-                rowtextbuilder('Sent To :', _item.sendTo ?? ''),
+                rowtextbuilder('Sent To :', _item.sendTo.toString()),
                 const SizedBox(
                   height: 5,
                 ),
