@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 import '../utilities/theme.dart';
 
 class txtFormField extends StatefulWidget {
-  const txtFormField({super.key, this.isEdit, this.isEditable, this.texthint,required this.controller, this.text});
-  final bool? isEdit,isEditable;
+  const txtFormField(
+      {super.key,
+      this.isEdit,
+      this.isEditable,
+      this.texthint,
+      required this.controller,
+      this.text});
+  final bool? isEdit, isEditable;
   final TextEditingController controller;
   final String? texthint;
   final String? text;
@@ -17,8 +23,11 @@ class _txtFormFieldState extends State<txtFormField> {
   @override
   void initState() {
     super.initState();
-    if (widget.text != null || widget.text != '') {widget.controller.text = widget.text??'';}
+    if (widget.text != null || widget.text != '') {
+      widget.controller.text = widget.text ?? '';
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -27,7 +36,7 @@ class _txtFormFieldState extends State<txtFormField> {
         controller: widget.controller,
         style: ThemeConstant.blackTextBold18,
         enabled: widget.isEdit == true
-            ? widget.isEditable==true
+            ? widget.isEditable == true
                 ? true
                 : false
             : false,

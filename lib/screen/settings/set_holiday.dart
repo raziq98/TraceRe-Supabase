@@ -1,10 +1,11 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/service/holiday_service.dart';
+import 'package:flutter_application_1/widget/input.dart';
 
 import '../../components/animated_list.dart';
 import '../../model/holiday.dart';
-import '../../model/mockdata/mockHoliday.dart';
 import '../../model/user.dart';
 import '../../utilities/theme.dart';
 
@@ -16,8 +17,7 @@ class SetHoliday extends StatefulWidget {
 }
 
 class _SetHolidayState extends State<SetHoliday> {
-  late Users _currentUser;
-  List<Holiday> _tempList = [];
+  List<Holiday?>? _tempList = [];
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _startFromController = TextEditingController();
   final TextEditingController _endAtController = TextEditingController();
@@ -28,13 +28,21 @@ class _SetHolidayState extends State<SetHoliday> {
   void initState() {
     // TODO: implement Holiday update & insert
     super.initState();
-    _tempList = MockHoliday.malaysiaHolidays2020;
-    //listenkey.currentState!.insertAllItems(0, _tempList.length);
+    getHolidayList();
+    //listenkey.currentState!.insertAllItems(0, _tempList!.length);
   }
 
-  void remove(int index) {
-    final removedItem = _tempList[index];
-    _tempList.removeAt(index);
+  Future<void> getHolidayList() async {
+    final data = await HolidayService().retrieveHolidayList();
+    setState(() {
+      _tempList = data;
+    });
+  }
+
+  void remove(int index) async {
+    final removedItem = _tempList![index];
+    _tempList!.removeAt(index);
+    await HolidayService().deleteHoliday(removedItem!.id!);
     listenkey.currentState!.removeItem(
         index,
         (context, animation) =>
@@ -42,28 +50,32 @@ class _SetHolidayState extends State<SetHoliday> {
         duration: const Duration(milliseconds: 500));
   }
 
-  void _add() {
+  void _add() async {
     String startFromText = _startFromController.text;
     DateTime? parsedStartDate;
     DateTime? parsedEndAtDate;
     try {
-      parsedEndAtDate = DateTime.parse(startFromText);
+      parsedStartDate = DateTime.parse(startFromText);
     } catch (e) {
       print('Error parsing date: $e');
     }
 
     String endAtText = _endAtController.text;
     try {
-      parsedStartDate = DateTime.parse(endAtText);
+      parsedEndAtDate = DateTime.parse(endAtText);
+      if(_daysController.text.isNotEmpty){
+        parsedEndAtDate = parsedEndAtDate.add(Duration(days: int.parse(_daysController.text)));
+      }
     } catch (e) {
       print('Error parsing date: $e');
     }
     var temp = Holiday(
         name: _nameController.text,
-        startFrom: parsedStartDate,
-        endAt: parsedEndAtDate,
-        dayAmount: int.parse(_daysController.text));
-    _tempList.add(temp);
+        startFrom: startFromText,
+        endAt: parsedEndAtDate.toString(),
+        dayAmount: int.parse(_daysController.text),description: '');
+    _tempList!.add(temp);
+    await HolidayService().insertNewHoliday(temp.toJson());
   }
 
   @override
@@ -81,13 +93,13 @@ class _SetHolidayState extends State<SetHoliday> {
         child: SizedBox(
           height: height - 100,
           width: width,
-          child: AnimatedList(
+          child: _tempList!.isEmpty? const Center(child: CircularProgressIndicator(),):AnimatedList(
             key: listenkey,
-            initialItemCount: _tempList.length,
+            initialItemCount: _tempList!.length,
             itemBuilder:
                 (BuildContext context, int index, Animation<double> animation) {
               return AnimatedItemList(
-                item: _tempList[index],
+                item: _tempList![index]!,
                 animations: animation,
                 onTap: () => remove(index),
               );
@@ -133,23 +145,39 @@ class _SetHolidayState extends State<SetHoliday> {
                   const SizedBox(
                     height: 10,
                   ),
-                  branchDetailField(
-                      '', 'Holiday name', true, _nameController, true),
+                  txtFormField(
+                    isEdit: true,
+                    isEditable: true,
+                    controller: _nameController,
+                    texthint: 'Holiday Name',
+                  ),
                   const SizedBox(
                     height: 8,
                   ),
-                  branchDetailField('', 'Holiday start from', true,
-                      _startFromController, true),
+                  txtFormField(
+                    isEdit: true,
+                    isEditable: true,
+                    controller: _startFromController,
+                    texthint: 'Holiday start from',
+                  ),
                   const SizedBox(
                     height: 8,
                   ),
-                  branchDetailField(
-                      '', 'Holiday end at', true, _endAtController, true),
+                  txtFormField(
+                    isEdit: true,
+                    isEditable: true,
+                    controller: _endAtController,
+                    texthint: 'Holiday end at',
+                  ),
                   const SizedBox(
                     height: 8,
                   ),
-                  branchDetailField(
-                      '', 'Number of days', true, _daysController, true),
+                  txtFormField(
+                    isEdit: true,
+                    isEditable: true,
+                    controller: _daysController,
+                    texthint: 'Number of days',
+                  ),
                   const SizedBox(
                     height: 26,
                   ),
