@@ -189,7 +189,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
                   const SizedBox(
                     height: 10,
                   ),
-                  branchDetailField(branch?.companyId ?? '', 'Company Id', true,
+                  branchDetailField(branch?.companyId.toString() ?? '', 'Company Id', true,
                       _compayIdController, true),
                   const SizedBox(
                     height: 8,

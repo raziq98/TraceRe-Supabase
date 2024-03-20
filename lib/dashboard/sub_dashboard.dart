@@ -33,7 +33,6 @@ class _SubDashboardState extends State<SubDashboard> {
   @override
   void initState() {
     super.initState();
-    _currentUser = me;
     fetchEmployeeItem();
   }
 

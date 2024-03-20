@@ -4,7 +4,7 @@ class MockBranch {
   static List<Branch> branches = [
     Branch(
       id: 1,
-      companyId: "1",
+      companyId: 1,
       address: "123 Main St",
       postalCode: 12345,
       country: "USA",
@@ -14,7 +14,7 @@ class MockBranch {
     ),
     Branch(
       id: 2,
-      companyId: "1",
+      companyId: 1,
       address: "456 Elm St",
       postalCode: 67890,
       country: "USA",
@@ -24,7 +24,7 @@ class MockBranch {
     ),
     Branch(
       id: 3,
-      companyId: "2",
+      companyId: 1,
       address: "789 Oak St",
       postalCode: 54321,
       country: "Canada",
@@ -34,7 +34,7 @@ class MockBranch {
     ),
     Branch(
       id: 4,
-      companyId: "2",
+      companyId: 1,
       address: "101 Pine St",
       postalCode: 98765,
       country: "Canada",
@@ -44,7 +44,7 @@ class MockBranch {
     ),
     Branch(
       id: 5,
-      companyId: "1",
+      companyId:1,
       address: "222 Maple St",
       postalCode: 13579,
       country: "USA",
@@ -54,7 +54,7 @@ class MockBranch {
     ),
     Branch(
       id: 1,
-      companyId: "2",
+      companyId: 1,
       address: "333 Cedar St",
       postalCode: 24680,
       country: "Canada",
@@ -64,7 +64,7 @@ class MockBranch {
     ),
     Branch(
       id: 2,
-      companyId: "1",
+      companyId: 1,
       address: "444 Birch St",
       postalCode: 86420,
       country: "USA",
@@ -74,7 +74,7 @@ class MockBranch {
     ),
     Branch(
       id: 3,
-      companyId: "2",
+      companyId: 1,
       address: "555 Walnut St",
       postalCode: 97531,
       country: "Canada",
@@ -84,7 +84,7 @@ class MockBranch {
     ),
     Branch(
       id: 4,
-      companyId: "1",
+      companyId: 1,
       address: "666 Oak St",
       postalCode: 12345,
       country: "USA",
@@ -94,7 +94,7 @@ class MockBranch {
     ),
     Branch(
       id: 5,
-      companyId: "2",
+      companyId:1,
       address: "777 Pine St",
       postalCode: 54321,
       country: "Canada",

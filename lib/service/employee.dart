@@ -6,14 +6,14 @@ class EmployeeService {
   final supabase = Supabase.instance.client;
 
   Future<List<Users?>> retrieveEmployeeList() async {
-    final temp = await supabase.from('users').select('*');
+    final temp = await supabase.from('users').select('*,branches(*),department(*),role(*)');
     List<Users?> employeeList = temp.map((e) => Users.fromJson(e)).toList();
     return employeeList;
   }
 
   Future<Users?> retrieveEmployeeItem(int employeeId) async {
     final temp =
-        await supabase.from('users').select('*').eq('id', employeeId).single();
+        await supabase.from('users').select('*,career_level(*),department(*)').eq('id', employeeId).single();
     return Users.fromJson(temp);
   }
 
