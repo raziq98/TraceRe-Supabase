@@ -130,7 +130,7 @@ class _SettingsState extends State<Settings> {
                 ),
                 ListTile(
                   title: Text(
-                    'Update WOrk Type',
+                    'Update Work Type',
                     style: ThemeConstant.blackTextBold16,
                   ),
                   onTap: () {
