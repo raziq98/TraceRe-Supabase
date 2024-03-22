@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../model/branch.dart';
 import '../../../model/company.dart';
-import '../../../model/mockdata/mockBranch.dart';
-import '../../../model/mockdata/mockCompany.dart';
+import '../../../service/company_service.dart';
 import '../../../utilities/theme.dart';
 
 class CompanyProfile extends StatefulWidget {
@@ -17,7 +16,7 @@ class CompanyProfile extends StatefulWidget {
 }
 
 class _CompanyProfileState extends State<CompanyProfile> {
-  late List<Company> _company;
+  Company? _company;
 
   File? _profilePicture;
   bool _isEdit = false;
@@ -31,8 +30,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
       TextEditingController();
   final TextEditingController _companyBioController = TextEditingController();
   // Branch
-  late Company selectedCompany;
-  late List<Branch> branchList;
+  late List<Branch>? branchList;
   final TextEditingController _compayIdController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _postalCodeController = TextEditingController();
@@ -48,14 +46,15 @@ class _CompanyProfileState extends State<CompanyProfile> {
     // TODO any changes on company do on _saveData
 
     super.initState();
-    _company =
-        MockCompany.companies.where((company) => company.id == 1).toList();
-    if (_company.isNotEmpty) {
-      selectedCompany = _company[0];
-    }
-    branchList = MockBranch.branches
-        .where((branch) => branch.companyId == selectedCompany.id.toString())
-        .toList();
+    getCompany();
+  }
+
+  Future<void> getCompany() async {
+    final data = await CompanyService().retrieveCompany();
+    setState(() {
+      _company = data;
+      branchList = _company!.branchess;
+    });
   }
 
   Future<File?> _getImageFromGallery() async {
@@ -189,8 +188,8 @@ class _CompanyProfileState extends State<CompanyProfile> {
                   const SizedBox(
                     height: 10,
                   ),
-                  branchDetailField(branch?.companyId.toString() ?? '', 'Company Id', true,
-                      _compayIdController, true),
+                  branchDetailField(branch?.companyId.toString() ?? '',
+                      'Company Id', true, _compayIdController, true),
                   const SizedBox(
                     height: 8,
                   ),
@@ -199,8 +198,8 @@ class _CompanyProfileState extends State<CompanyProfile> {
                   const SizedBox(
                     height: 8,
                   ),
-                  branchDetailField(branch?.postalCode.toString() ?? '', 'Postal Code',
-                      true, _postalCodeController, true),
+                  branchDetailField(branch?.postalCode.toString() ?? '',
+                      'Postal Code', true, _postalCodeController, true),
                   const SizedBox(
                     height: 8,
                   ),
@@ -284,20 +283,24 @@ class _CompanyProfileState extends State<CompanyProfile> {
         child: SizedBox(
           height: height + height - (height * 0.6),
           width: width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              pictureSection(context),
-              detailSection(),
-              const SizedBox(
-                height: 22,
-              ),
-            ],
-          ),
+          child: _company == null
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    pictureSection(context),
+                    detailSection(),
+                    const SizedBox(
+                      height: 22,
+                    ),
+                  ],
+                ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -344,23 +347,23 @@ class _CompanyProfileState extends State<CompanyProfile> {
             const SizedBox(
               height: 15,
             ),
-            detailField(selectedCompany.name ?? '', 'Company Name', _isEdit,
+            detailField(_company!.name ?? '', 'Company Name', _isEdit,
                 _nameController, true),
             const SizedBox(
               height: 15,
             ),
-            detailField(selectedCompany.phone ?? '', 'Phone Number', _isEdit,
+            detailField(_company!.phone ?? '', 'Phone Number', _isEdit,
                 _phoneController, true),
             const SizedBox(
               height: 15,
             ),
-            detailField(selectedCompany.email ?? '', 'Email', _isEdit,
+            detailField(_company!.email ?? '', 'Email', _isEdit,
                 _emailController, true),
             const SizedBox(
               height: 15,
             ),
             detailField(
-                selectedCompany.establishedDate ?? '',
+                _company!.establishedDate ?? '',
                 'Date of Establishment',
                 true,
                 _establishedDateController,
@@ -368,7 +371,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
             const SizedBox(
               height: 15,
             ),
-            detailField(selectedCompany.companyBio ?? '', "Company's Biography",
+            detailField(_company!.companyBio ?? '', "Company's Biography",
                 _isEdit, _companyBioController, true),
             const SizedBox(
               height: 25,
@@ -405,78 +408,83 @@ class _CompanyProfileState extends State<CompanyProfile> {
             const SizedBox(
               height: 20,
             ),
-            SizedBox(
-              height: 200,
-              width: MediaQuery.of(context).size.width,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(
-                  width: 10,
-                ),
-                itemCount: branchList.length,
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    width: 200,
-                    height: 150,
-                    padding: const EdgeInsets.only(left: 15),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: ThemeConstant.trcGrey1),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 15,
+            if (branchList != null)
+              SizedBox(
+                height: 200,
+                width: MediaQuery.of(context).size.width,
+                child: branchList!.isNotEmpty
+                    ? ListView.separated(
+                        separatorBuilder: (context, index) => const SizedBox(
+                          width: 10,
                         ),
-                        Text(
-                          branchList[index].branchCode ?? '',
-                          style: ThemeConstant.blackTextBold18,
-                        ),
-                        Text(
-                          branchList[index].address ?? '',
-                          style: ThemeConstant.blackText14,
-                        ),
-                        Text(branchList[index].postalCode.toString(),
-                            style: ThemeConstant.blackText14),
-                        Text(branchList[index].country ?? '',
-                            style: ThemeConstant.blackText14),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                _updateBranch(context, branchList[index]);
-                              },
-                              child: Container(
-                                width: 140,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: ThemeConstant.trcLightPurple,
-                                  borderRadius: BorderRadius.circular(25),
+                        itemCount: branchList!.length,
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            width: 200,
+                            height: 150,
+                            padding: const EdgeInsets.only(left: 15),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: ThemeConstant.trcGrey1),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 15,
                                 ),
-                                child: Center(
-                                    child: Text(
-                                  'Edit Branch',
-                                  style: ThemeConstant.whiteTextBold14,
-                                )),
-                              ),
+                                Text(
+                                  branchList![index].branchCode ?? '',
+                                  style: ThemeConstant.blackTextBold18,
+                                ),
+                                Text(
+                                  branchList![index].address ?? '',
+                                  style: ThemeConstant.blackText14,
+                                ),
+                                Text(branchList![index].postalCode.toString(),
+                                    style: ThemeConstant.blackText14),
+                                Text(branchList![index].country ?? '',
+                                    style: ThemeConstant.blackText14),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        _updateBranch(
+                                            context, branchList![index]);
+                                      },
+                                      child: Container(
+                                        width: 140,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: ThemeConstant.trcLightPurple,
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                        ),
+                                        child: Center(
+                                            child: Text(
+                                          'Edit Branch',
+                                          style: ThemeConstant.whiteTextBold14,
+                                        )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                          );
+                        },
+                      )
+                    : const Text("The company hasn't open a branch yet"),
               ),
-            ),
           ],
         ),
       ),
@@ -490,67 +498,70 @@ class _CompanyProfileState extends State<CompanyProfile> {
           height: 160,
           width: 160,
           child: Card(
-            elevation: 12,
-            child: _isEdit
-                ? Stack(
-                    children: [
-                      Center(
-                        child: InkWell(
-                          onTap: () {
-                            _showImagePicker(context);
-                          },
-                          child: Container(
-                            height: 160,
-                            width: 160,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: ThemeConstant.trcLightPurple,
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: _profilePicture != null
-                                ? _profilePicture is File
-                                    ? Image.file(_profilePicture as File)
-                                    : Image.asset(_profilePicture as String)
-                                : Image.asset(selectedCompany.photo!),
-                          ),
+              elevation: 12,
+              child:
+                  // _isEdit
+                  //     ?
+                  Stack(
+                children: [
+                  // Center(
+                  //   child: InkWell(
+                  //     onTap: () {
+                  //       _showImagePicker(context);
+                  //     },
+                  //     child: Container(
+                  //       height: 160,
+                  //       width: 160,
+                  //       decoration: BoxDecoration(
+                  //         border: Border.all(
+                  //             color: ThemeConstant.trcLightPurple,
+                  //             width: 2),
+                  //         borderRadius: BorderRadius.circular(15),
+                  //       ),
+                  //       child: _profilePicture != null
+                  //           ? _profilePicture is File
+                  //               ? Image.file(_profilePicture as File)
+                  //               : Image.asset(_profilePicture as String)
+                  //           : Image.asset(_company!.photo!),
+                  //     ),
+                  //   ),
+                  // ),
+                  Positioned(
+                      bottom: -5,
+                      right: -5,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: ThemeConstant.trcGreen),
+                        child: Center(
+                          child: IconButton(
+                              tooltip: 'Upload Photo',
+                              onPressed: () {
+                                _showImagePicker(context);
+                              },
+                              icon: const Center(
+                                child: Icon(
+                                  Icons.upload_outlined,
+                                  size: 30,
+                                  color: ThemeConstant.trcBlack,
+                                ),
+                              )),
                         ),
-                      ),
-                      Positioned(
-                          bottom: -5,
-                          right: -5,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: ThemeConstant.trcGreen),
-                            child: Center(
-                              child: IconButton(
-                                  tooltip: 'Upload Photo',
-                                  onPressed: () {
-                                    _showImagePicker(context);
-                                  },
-                                  icon: const Center(
-                                    child: Icon(
-                                      Icons.upload_outlined,
-                                      size: 30,
-                                      color: ThemeConstant.trcBlack,
-                                    ),
-                                  )),
-                            ),
-                          ))
-                    ],
-                  )
-                : Container(
-                    height: 120,
-                    width: 120,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: ThemeConstant.trcLightPurple, width: 2),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Image.asset(selectedCompany.photo!),
-                  ),
-          ),
+                      ))
+                ],
+              )
+              // :
+              // Container(
+              //     height: 120,
+              //     width: 120,
+              //     decoration: BoxDecoration(
+              //       border: Border.all(
+              //           color: ThemeConstant.trcLightPurple, width: 2),
+              //       borderRadius: BorderRadius.circular(15),
+              //     ),
+              //     child: Image.asset(_company!.photo!),
+              //   ),
+              ),
         ),
       ],
     );
