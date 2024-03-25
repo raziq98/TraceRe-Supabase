@@ -20,7 +20,7 @@ class Branch {
   });
 
   Branch.fromJson(Map<String, dynamic> json) {
-    id = json["branch_id"];
+    id = json["id"];
     companyId = json["company_id"];
     address = json["address"];
     country = json["country"];
@@ -31,7 +31,7 @@ class Branch {
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data["branch_id"] = id;
+    data["id"] = id;
     data["company_id"] = companyId;
     data["address"] = address;
     data["country"] = country;
