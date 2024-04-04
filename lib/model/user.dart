@@ -1,23 +1,7 @@
-class UserResponse {
-  int? itemCount;
-  List<Users>? list;
+import 'package:flutter_application_1/model/branch.dart';
+import 'package:flutter_application_1/model/department_model.dart';
 
-  UserResponse({
-    this.list,
-    this.itemCount,
-  });
-  UserResponse.fromJson(Map<String, dynamic> json) {
-    itemCount = json["itemCount"];
-    list = (json["body"] as List).map((json) => Users.fromJson(json)).toList();
-
-  }
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data["itemCount"] = itemCount;
-    data["body"] = list;
-    return data;
-  }
-}
+import 'role_model.dart';
 
 class Users {
   int? id;
@@ -31,12 +15,15 @@ class Users {
   String? email;
   String? password;
   int? roleId;
+  Role? roleObj;
   String? branchCode;
   int? departmentId;
+  Department? deptObj;
   bool? isAvailable;
   bool? isOffDay;
   String? dateOfBirth;
   int? branchId;
+  Branch? branchObj;
   int? levelId;
 
  Users({
@@ -56,6 +43,9 @@ class Users {
     this.isAvailable,
     this.isOffDay,
     this.dateOfBirth,
+    this.deptObj,
+    this.branchObj,
+    this.roleObj,
   });
 
   Users.fromJson(Map<String, dynamic> json) {
@@ -77,6 +67,9 @@ class Users {
     postalCode = json["postal_code"];
     branchId = json['branch_id'];
     levelId = json['level_id'];
+    deptObj = json['department']!=null?Department.fromJson(json['department']):null;
+    branchObj = json['branches']!=null?Branch.fromJson(json['branches']):null;
+    roleObj = json['role']!=null?Role.fromJson(json['role']):null;
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -98,6 +91,9 @@ class Users {
     data["postal_code"]=postalCode ;
     data['branch_id']=branchId;
     data['level_id']=levelId;
+    data['department']=deptObj;
+    data['branches']=branchObj;
+    data['role']=roleObj;
     return data;
   }
 }

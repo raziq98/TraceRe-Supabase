@@ -1,27 +1,10 @@
-class NotificationResponse {
-  List<MyNotification>? list;
-
-  NotificationResponse({
-    this.list,
-  });
-  NotificationResponse.fromJson(Map<String, dynamic> json) {
-    list = (json["body"] as List).map((json) => MyNotification.fromJson(json)).toList();
-
-  }
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data["body"] = list;
-    return data;
-  }
-}
-
 class MyNotification {
-  String? id;
+  int? id;
   String? sender;
   DateTime? createdDate;
   int? statusId;
-  String? sendTo;
-  String? requestType;
+  int? sendTo;
+  int? requestType;
   DateTime? requestedDateFrom;
   DateTime? requestedDateTo;
   String? description;
@@ -43,28 +26,30 @@ class MyNotification {
 
   MyNotification.fromJson(Map<String, dynamic> json) {
     id=json["id"];
-    sender = json["user_id"];
-    createdDate = json["created_date"];
+    sender = json["sender"];
+    createdDate = json["created_at"];
     statusId = json["status_id"];
-    sendTo = json["approver_name"];
-    requestType = json["request_type"];
-    requestedDateFrom=json["requested_date_from"];
-    requestedDateTo = json["requested_date_to"];
+    sendTo = json["send_to"];
+    requestType = json["request_type_id"];
+    requestedDateFrom=json["requested_from"];
+    requestedDateTo = json["requested_to"];
     description = json["description"];
     suggestion=json["suggestion"];
+    isRead=json["is_read"];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data["id"]=id;
-    data["user_id"] = sender;
-    data["created_date"] = createdDate;
+    data["sender"] = sender;
+    data["created_at"] = createdDate;
     data["status_id"] = statusId;
-    data["approver_name"] = sendTo;
-    data["request_type"]=requestType ;
-    data["requested_date_from"]=requestedDateFrom;
-    data["requested_date_to"] = requestedDateTo;
+    data["send_to"] = sendTo;
+    data["request_type_id"]=requestType ;
+    data["requested_from"]=requestedDateFrom;
+    data["requested_to"] = requestedDateTo;
     data["description"]=description ;
     data["suggestion"]=suggestion;
+    data["is_read"]=isRead;
     return data;
     }
 

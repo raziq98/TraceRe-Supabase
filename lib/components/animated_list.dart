@@ -54,10 +54,10 @@ class AnimatedItemList extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        formatStart(item.startFrom! ),
+                        item.startFrom!,
                         style: ThemeConstant.blackText16,
                       ),
-                      Text(' - ${formatEnd(item.endAt!)}', style: ThemeConstant.blackText16),
+                      Text(' - ${item.endAt}', style: ThemeConstant.blackText16),
                     ],
                   ),
                   Text('Days : ${item.dayAmount}',

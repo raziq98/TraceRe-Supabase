@@ -18,7 +18,7 @@ class UpdateEmployee extends StatefulWidget {
 }
 
 class _UpdateEmployeeState extends State<UpdateEmployee> {
-  List<Users?> _tempList = [];
+  List<Users?> _tempList=[],_tempList1 = [];
   final TextEditingController _roleIdController = TextEditingController();
   final TextEditingController _branchIdController = TextEditingController();
   final TextEditingController _departmentIdController = TextEditingController();
@@ -42,7 +42,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
   Future<void> getEmployeeList() async {
     final data = await EmployeeService().retrieveEmployeeList();
     setState(() {
-      _tempList = data;
+      _tempList =_tempList1= data;
     });
   }
 
@@ -58,16 +58,24 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
   //}
 
   void setFilter(String type, String keyword) {
-    List<Users> holder = [];
-    holder = MockUsers.users.where((person) => person.name == keyword).toList();
+    List<Users?> holder = [];
+    // holder = MockUsers.users.where((person) => person.name == keyword).toList();
+    holder = _tempList.where((element) => element!.name == keyword).toList();
     if (holder.isEmpty) {
-      holder = MockUsers.users
-          .where((person) => person.branchCode == keyword)
+      // holder = MockUsers.users
+      //     .where((person) => person.branchCode == keyword)
+      //     .toList();
+
+      holder = _tempList
+          .where((element) => element!.branchObj!.branchCode == keyword)
           .toList();
     }
     if (holder.isEmpty) {
-      holder = MockUsers.users
-          .where((person) => person.departmentId.toString() == keyword)
+      // holder = MockUsers.users
+      //     .where((person) => person.departmentId.toString() == keyword)
+      //     .toList();
+      holder = _tempList
+          .where((element) => element!.deptObj!.companyName == keyword)
           .toList();
     }
 
@@ -179,7 +187,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       isEditable: true,
                       controller: _roleIdController,
                       texthint: 'Role Id',
-                      text: user.roleId.toString(),
+                      text: user.roleId != null ? user.roleObj!.name : '',
                     ),
                     const SizedBox(
                       height: 8,
@@ -189,18 +197,21 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                       isEditable: true,
                       controller: _branchIdController,
                       texthint: 'Branch Code',
-                      text: user.branchCode.toString(),
+                      text: user.branchId != null
+                          ? user.branchObj!.branchCode
+                          : '',
                     ),
                     const SizedBox(
                       height: 8,
                     ),
                     txtFormField(
-                      isEdit: true,
-                      isEditable: true,
-                      controller: _departmentIdController,
-                      texthint: 'Department Id',
-                      text: user.departmentId.toString(),
-                    ),
+                        isEdit: true,
+                        isEditable: true,
+                        controller: _departmentIdController,
+                        texthint: 'Department',
+                        text: user.departmentId != null
+                            ? user.deptObj!.companyName
+                            : ''),
                     const SizedBox(
                       height: 8,
                     ),
@@ -421,7 +432,7 @@ class _UpdateEmployeeState extends State<UpdateEmployee> {
                   style: ThemeConstant.blackText14,
                 ),
                 Text(
-                  _tempList[index]!.departmentId.toString(),
+                  _tempList[index]!.email ?? '',
                   style: ThemeConstant.blackText14,
                 ),
               ],

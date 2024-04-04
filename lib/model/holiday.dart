@@ -1,26 +1,9 @@
-class HolidayResponse {
-  List<Holiday>? list;
-
-  HolidayResponse({
-    this.list,
-  });
-  HolidayResponse.fromJson(Map<String, dynamic> json) {
-    list = (json["body"] as List).map((json) => Holiday.fromJson(json)).toList();
-
-  }
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data["body"] = list;
-    return data;
-  }
-}
-
 class Holiday {
   int? id;
   String? name;
-  DateTime? startFrom;
-  DateTime? endAt;
-  String? dayAmount;
+  String? startFrom;
+  String? endAt;
+  int? dayAmount;
   String? description;
  Holiday({
     this.id,
@@ -31,22 +14,23 @@ class Holiday {
     this.description,
   });
 
-  Holiday.fromJson(Map<String, dynamic> json) {
-    id = json["holiday_id"];
-    name = json["company_id"];
-    startFrom = json["startFrom"];
-    dayAmount = json["dayAmount"];
-    endAt = json["postal_code"];
-    description=json["holiday_code"];
+  factory Holiday.fromJson(Map<String, dynamic> json) {
+    return Holiday(
+      id: json['id'],
+      name: json['name'],
+      startFrom: json['start_from'].toString(),
+      endAt: json['end_at'].toString(),
+      dayAmount: json['day_amount'],
+      description: json['description'],
+    );
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data["holiday_id"] = id;
-    data["company_id"] = name;
-    data["startFrom"] = startFrom;
-    data["dayAmount"] = dayAmount;
-    data["postal_code"]=endAt ;
-    data["holiday_code"]=description;
+    data["name"] = name;
+    data["start_from"] = startFrom;
+    data["end_at"]=endAt ;
+    data["day_amount"] = dayAmount;
+    data["description"]=description;
     return data;
   }
 }

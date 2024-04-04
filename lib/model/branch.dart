@@ -1,25 +1,8 @@
-class BranchResponse {
-  List<Branch>? list;
-
-  BranchResponse({
-    this.list,
-  });
-  BranchResponse.fromJson(Map<String, dynamic> json) {
-    list = (json["body"] as List).map((json) => Branch.fromJson(json)).toList();
-
-  }
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data["body"] = list;
-    return data;
-  }
-}
-
 class Branch {
   int? id;
-  String? companyId;
+  int? companyId;
   String? address;
-  String? postalCode;
+  int? postalCode;
   String? country;
   String? branchCode;
   String? domain;
@@ -37,7 +20,7 @@ class Branch {
   });
 
   Branch.fromJson(Map<String, dynamic> json) {
-    id = json["branch_id"];
+    id = json["id"];
     companyId = json["company_id"];
     address = json["address"];
     country = json["country"];
@@ -48,7 +31,7 @@ class Branch {
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data["branch_id"] = id;
+    data["id"] = id;
     data["company_id"] = companyId;
     data["address"] = address;
     data["country"] = country;
